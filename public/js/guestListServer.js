@@ -4,12 +4,12 @@
 // To do every year:
 // 1) Update config file below. Must have at least the lowest paid plan to have enough database queries for check in day
 // 2) Delete delegates in database if any. Upload current year's guest CSV.
-// 3) Update Master Assignments Sheet link in HTML 
+// 3) Update Master Assignments Sheet link in HTML
 // 4) Review and improve code
 
 //--Left to do---
-// 1) Synchrony between two open check in windows. 
-//    You currently need to refresh the site to have the 
+// 1) Synchrony between two open check in windows.
+//    You currently need to refresh the site to have the
 //    updates from another session to show up in check in count
 // 2) settings being only available option with selfcheck in mode
 // 3) password for settings
@@ -34,7 +34,7 @@ var defaultInitialGuestCount = 0;
 
 var currentGuestCount = defaultInitialGuestCount;
 var checkInMode = "SELFCHECKIN"; //"SELFCHECKIN" or "MASTER"
-var additionalAttributes = []; //attributes other than School or Name 
+var additionalAttributes = []; //attributes other than School or Name
 
 
 // Takes any html element ID and add the hidden CSS class
@@ -52,7 +52,7 @@ function addSchoolToAutoComplete(school){
 	dataList = document.getElementById("schoolList");
 	optionHTML = document.createElement("option");
 	optionHTML.setAttribute("value",school);
-	dataList.appendChild(optionHTML);		
+	dataList.appendChild(optionHTML);
 
 }
 
@@ -64,7 +64,7 @@ function loadSchoolListToAutoComplete(schoolList){
 		schoolString = schoolList[i];
 		optionHTML = document.createElement("option");
 		optionHTML.setAttribute("value",schoolString);
-		dataList.appendChild(optionHTML);	
+		dataList.appendChild(optionHTML);
 	}
 
 }
@@ -76,7 +76,7 @@ function loadAttendeeToAutocomplete(attendeeDictionary){
 	optionHTML.classList.add("unselectedName");
 	optionHTML.setAttribute("value",attendeeDictionary["Name"]);
 	optionHTML.setAttribute("hash",createDictionaryHash(attendeeDictionary));
-	dataList.appendChild(optionHTML);		
+	dataList.appendChild(optionHTML);
 
 }
 
@@ -95,12 +95,12 @@ function checkInGuest(guestHash){
 			if (document.getElementById("row:"+guestHash)){
 				var rowsClassList = document.getElementById("row:"+guestHash).classList;
 				rowsClassList.add('checkedInRow');
-			}			    
+			}
 			syncGuestCount();
 		})
 		.catch(function(error) {
 		    console.error("Error checking in guest on FB: ", error);
-		});		
+		});
 
 }
 
@@ -120,13 +120,13 @@ function checkOutGuest(guestHash){
 				var rowsClassList = document.getElementById("row:"+guestHash).classList;
 				if (rowsClassList.contains('checkedInRow')){
 					rowsClassList.remove('checkedInRow');
-				}			
+				}
 			}
 			syncGuestCount();
 		})
 		.catch(function(error) {
 		    console.error("Error checking in guest on FB: ", error);
-		});	
+		});
 
 
 }
@@ -141,12 +141,12 @@ function checkOutAllGuests(){
 	        // doc.data() is never undefined for query doc snapshots
 	        var guestHash = doc.id;
 	        checkOutGuest(guestHash);
-	    });	
+	    });
 
 	});
 }
 
-// Toggles check in status for use in check boxes 
+// Toggles check in status for use in check boxes
 function toggleGuestCheckIn(guestHash){
 	guestStates[guestHash] = !guestStates[guestHash];
 	var rowsClassList = document.getElementById("row:"+guestHash).classList;
@@ -178,7 +178,7 @@ function createDictionaryHash(dictionary){
 
 }
 
-// Populates the 'guestStates' dictionary from an input guest dictionary, 
+// Populates the 'guestStates' dictionary from an input guest dictionary,
 // setting everyone to checked-in false in the beginning
 function createGuestDataStructure(guestsDict){
 	var members = Object.keys(guestsDict);
@@ -210,7 +210,7 @@ function uploadDataToFirebase(guestDict) {
 			})
 			.catch(function(error) {
 			    console.error("Error writing document: ", error);
-			});  		
+			});
   	}
 
 
@@ -225,26 +225,23 @@ function printListOfStudents(){
 	        // doc.data() is never undefined for query doc snapshots
 	        console.log(doc.id, " => ", doc.data());
 	    });
-	});	
+	});
 }
 
 globalAttendees = []
 function loadAttendeeDataIntoGlobalArray(){
-	var attendees = []
 	var attendeesSoFar = 0
-	var notFinished = true;
 	db.collection("students").get().then(function(querySnapshot) {
 	    querySnapshot.forEach(function(doc) {
 	        // doc.data() is never undefined for query doc snapshots
 	        //console.log(doc.id, " => ", doc.data());
 	        localAttendeeData = doc.data();
-	        attendees.push(localAttendeeData);
 	        globalAttendees.push(localAttendeeData);
 	        attendeesSoFar += 1;
 	        console.log("Processed",localAttendeeData);
 	    });
 	}).then( function(attendees){
-		for (i = 0; i < globalAttendees.length; i++) { 
+		for (i = 0; i < globalAttendees.length; i++) {
 		  loadAttendeeToAutocomplete(globalAttendees[i]);
 		}
 	});
@@ -252,16 +249,16 @@ function loadAttendeeDataIntoGlobalArray(){
 
 function getGlobalAttendeesNames(){
 	names = []
-	for (i = 0; i < globalAttendees.length; i++) { 
+	for (i = 0; i < globalAttendees.length; i++) {
 	  names.push(globalAttendees[i]["Name"]);
-	}	
+	}
 	return names;
 }
 
 
 // Careful! Exhausts Firebase daily queries limit in less than three minutes
-// Was an attempt to keep guest check in status synced between two simultaneous sessions 
-// Does not work 
+// Was an attempt to keep guest check in status synced between two simultaneous sessions
+// Does not work
 function watchGuest(guestHash){
 	var checkInstatusRef = db.ref('students/'+guestHash+'/checkInStatus');
 
@@ -274,8 +271,8 @@ function watchGuest(guestHash){
 			checkInGuest(guestHash);
 		} else{
 			checkOutGuest(guestHash);
-		}	  
-	});	
+		}
+	});
 }
 
 // For debugging purposes
@@ -305,6 +302,8 @@ function syncSettings(){
 	        var cloudCheckinMode = settingsDictionary["checkInMode"];
 	        var cloudConferenceName = settingsDictionary["conferenceName"];
 	       	var cloudNavBarColor = settingsDictionary["navBarColor"];
+          var masterSheetLink = settingsDictionary["masterAssignmentsSheetLink"];
+          document.getElementById("masterAssignmentsSheetLink").setAttribute("href",masterSheetLink);
 
 	       	checkInMode = cloudCheckinMode;
 	       	setNavBarColor(cloudNavBarColor);
@@ -316,8 +315,8 @@ function syncSettings(){
 			revealOnlySelfCheckIn();
 		} else{
 			revealOnlyMasterCheckIn();
-		}			
-	});	
+		}
+	});
 }
 
 // Sync guestStates from firebase database
@@ -341,12 +340,12 @@ function syncFromFirebase(){
 		        guestDictAttributes = Object.keys(guestDict);
 		        for (var i=0 ; i <guestDictAttributes.length; i++){
 		        	localAttribute = guestDictAttributes[i];
-		        	if (localAttribute != "School" && localAttribute != "checkInStatus" 
+		        	if (localAttribute != "School" && localAttribute != "checkInStatus"
 		        		&& localAttribute !="Name"){
 		        		additionalAttributes.push(localAttribute);
 		        	}
 		        }
-		        gotAdditionalAttributes = true	        	
+		        gotAdditionalAttributes = true
 	        }
 
 
@@ -364,24 +363,29 @@ function syncFromFirebase(){
 	});
 }
 
+function cleanUnwantedChars(text){
+  var unwantedChars = ['"'];
+  var output = text;
+  for (var i = 0; i < unwantedChars.length; i++) {
+
+    var charToReplace = unwantedChars[i];
+    while (output.indexOf(charToReplace) != -1){
+      output = output.replace(charToReplace,"");
+    }
+
+  }
+  return output;
+}
 
 // Processes a CSV row of guests and uploads to FB database
 // Ensure that row's columns match with data values
 function processCSVDataRow(row,firstRowAttributes){
 	//attributes = ['Name','School','Committee','Delegation'];
 
-	// ----old method---
-	// var school = row[0]
-	// var committee = row[1]
-	// var delegation = row[2]	
-	// var name = row[3]
-
-	// var newGuestDict = {'Name':name,"School":school,'Committee':committee, 'Delegation':delegation, 'checkInStatus':false};
-
-	// ----new method----
 	var newGuestDict = {};
 	for (var i=0; i < firstRowAttributes.length; i++){
 		attribute = firstRowAttributes[i];
+    attribute = cleanUnwantedChars(attribute);
 		newGuestDict[attribute] = row[i];
 	}
 	uploadDataToFirebase(newGuestDict);
@@ -426,7 +430,7 @@ function UploadCSV() {
                   }
               }
 
-	          loadData();              
+	          loadData();
           }
 
           reader.readAsText(csvFileUpload.files[0]);
@@ -469,7 +473,7 @@ window.addEventListener('DOMContentLoaded', function(){
 				disableCheckInButton();
 			}
 
-		});	
+		});
 });
 
 
@@ -496,21 +500,21 @@ function clickCheckInButton(){
 			guestHash = currentOption.getAttribute("hash");
 			break;
 		}
-	}	
+	}
 	if (guestHash != ""){
 		checkInGuest(guestHash);
 		$('#success_tic').modal('show');
-	} 
+	}
 }
 
-// Exports CSV file 
+// Exports CSV file
 function exportCSV(){
 	exportRowsToCsv('MITMUNCCheckInData', getArrayOfRowData());
 }
 
 
 // Returns a row array of all attendees
-function getArrayOfRowData(){	
+function getArrayOfRowData(){
 	var columns = ['School','Committee','Delegation','checkInStatus'];
 
 	var outputRows = [];
@@ -535,7 +539,7 @@ function getArrayOfRowData(){
 			}
 			outputRows.push(rowArray);
 			if (school == 'CATS Academy Boston'){
-			}			
+			}
 		}
 	}
 	return outputRows;
@@ -636,7 +640,7 @@ function createCheckBox(checkboxID=null,onChangeFunction=null,extraClass=null){
 			var checkInStatus = guestStates[checkboxID];
 			input.checked = checkInStatus;
 		}
-	}	
+	}
 	if (checkboxID){
 		input.setAttribute('id',checkboxID);
 	}else{
@@ -665,13 +669,13 @@ function selectAllCheckBoxes(){
 			checkBox.checked = true;
 
 			checkInGuest(checkBox.id);
-			i++;			
+			i++;
 		} else{
 			var checkBox = currentGuestCheckBoxes[i];
 			checkBox.checked = false;
 
 			checkOutGuest(checkBox.id);
-			i++;				
+			i++;
 		}
 	}
 
@@ -711,7 +715,7 @@ function createTable(targetSchool){
 	//Everything after first row
 	// DO IT THROUGH FB
 	// go through db
-	var indexNumber = 1; 
+	var indexNumber = 1;
 	db.collection("students").get().then(function(querySnapshot) {
 	    querySnapshot.forEach(function(doc) {
 	        // doc.data() is never undefined for query doc snapshots
@@ -742,19 +746,19 @@ function createTable(targetSchool){
 				console.log(guestHash);
 			});
 
-			//add check in checkbox 
+			//add check in checkbox
 			var checkbox = createCheckBox(guestHash,"toggleGuestCheckIn('"+guestHash+"')",'guestCheckBox');
 
 			var indexCell = document.createElement('div');
-			indexCell.setAttribute("class","gridCell");	
-			indexCell.classList.add('checkBoxCell');	
+			indexCell.setAttribute("class","gridCell");
+			indexCell.classList.add('checkBoxCell');
 			indexCell.appendChild(checkbox);
 
-			gridRow.appendChild(indexCell);		
+			gridRow.appendChild(indexCell);
 
 			//Add row index second
 			var indexCell = document.createElement('div');
-			indexCell.setAttribute("class","gridCell");		
+			indexCell.setAttribute("class","gridCell");
 			var indexText = document.createTextNode(indexNumber.toString());
 			indexCell.appendChild(indexText);
 			gridRow.appendChild(indexCell);
@@ -766,7 +770,7 @@ function createTable(targetSchool){
 			for (var i=0; i < additionalAttributes.length; i++){
 				additionalAttribute = additionalAttributes[i];
 				cellAttributes.push(additionalAttribute);
-			}			
+			}
 
 			for (var j=0; j<cellAttributes.length; j++){
 				var attribute = cellAttributes[j]
@@ -776,11 +780,11 @@ function createTable(targetSchool){
 					var cellText = guestDict[attribute];
 					var cell = document.createElement('div');
 					cell.setAttribute('class','gridCell');
-					cell.innerHTML = cellText;				
+					cell.innerHTML = cellText;
 				}
 				gridRow.appendChild(cell);
 			}
-			grid.appendChild(gridRow);	        
+			grid.appendChild(gridRow);
 	    });
 	});
 	document.getElementById("guestList").appendChild(grid);
@@ -788,20 +792,20 @@ function createTable(targetSchool){
 
 // Clears the guest list table
 function clearGuestList(){
-	document.getElementById("guestList").innerHTML = "";	
+	document.getElementById("guestList").innerHTML = "";
 
 }
 
 function hideSectionByClass(className){
 	let root = document.documentElement;
 	let cssDisplayVariable = "--"+className+"Display";
-	root.style.setProperty(cssDisplayVariable, "none");	
+	root.style.setProperty(cssDisplayVariable, "none");
 }
 
 function revealSectionByClass(className){
 	let root = document.documentElement;
 	let cssDisplayVariable = "--"+className+"Display";
-	root.style.setProperty(cssDisplayVariable, "flex");	
+	root.style.setProperty(cssDisplayVariable, "flex");
 }
 
 
@@ -828,7 +832,7 @@ function revealOnlySelfCheckIn(){
 	hideSectionByClass("instructionsSection");
 	hideSectionByClass("schoolNameSection");
 	hideSectionByClass("attendeesSection");
-	revealSectionByClass("selfCheckInSection");	
+	revealSectionByClass("selfCheckInSection");
 
 }
 
@@ -842,7 +846,7 @@ function revealOnlyMasterCheckIn(){
 	revealSectionByClass("instructionsSection");
 	revealSectionByClass("schoolNameSection");
 	revealSectionByClass("attendeesSection");
-	hideSectionByClass("selfCheckInSection");	
+	hideSectionByClass("selfCheckInSection");
 
 }
 
@@ -869,12 +873,17 @@ function setNavBarColor(color=null){
 
 }
 
+
 function saveSettingsButton(){
 
 	var conferenceNameInput = document.getElementById("conferenceNameInput").value;
 
 	var rawNavBarColorInput = document.getElementById("navBarColorInput").value;
 	setNavBarColor(rawNavBarColorInput);
+
+  var newMasterAssignmentsSheetLink = document.getElementById("masterAssignmentsSheetInput").value;
+  document.getElementById("masterAssignmentsSheetLink").setAttribute("href",newMasterAssignmentsSheetLink);
+
 
 
 	var checkInModeDropDown = document.getElementById("checkInModeDropdown");
@@ -887,14 +896,15 @@ function saveSettingsButton(){
 	// persist to Firebase
 	db.collection("settings").doc("customSettings").update({
 	    'checkInMode':selectedCheckInMode,
-	    'navBarColor':rawNavBarColorInput
+	    'navBarColor':rawNavBarColorInput,
+      'masterAssignmentsSheetLink':newMasterAssignmentsSheetLink,
 	        })
 		.then(function() {
 			console.log("synced settings")
 		})
 		.catch(function(error) {
 		    console.error("Error updating settings", error);
-		});		
+		});
 
 	escapeSettings();
 }

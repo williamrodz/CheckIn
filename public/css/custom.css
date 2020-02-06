@@ -23,6 +23,7 @@
   border-radius: 10px;
 	color: white;
 	background-color: var(--customNavBarColor);
+	font-size: 20px;
 
 }
 
@@ -40,6 +41,9 @@
 	width: 75%;
 }
 
+.instructionsText{
+	font-size: 18px;
+}
 
 .pageBody{
 	height: 100%;
@@ -80,9 +84,9 @@
 
 
 
-/*#memberNameInput{
-	width: 90%;
-}*/
+#memberNameInput{
+	font-size: 30px;
+}
 
 .hiddenItem{
 	display: none;
@@ -99,13 +103,14 @@
 
 .attendeesSection{
 	display: var(--attendeesSectionDisplay);
-	flex-direction: column;	
-	}   
+	flex-direction: column;
+	padding-bottom: 50px;
+	}
 
 .guestNameInput{
 	width: 100%;
 	text-align: center;
-	
+
 }
 
 .schoolNameSection{
@@ -156,12 +161,13 @@
 */}
 
 .checkBoxCell{
-	max-width: 40px;	
+	max-width: 40px;
 }
 
 .settingsSection{
 	display: var(--settingsSectionDisplay);
 	flex-direction: column;
+	align-items: center;
 }
 
 .selfCheckInSection{
@@ -324,6 +330,3 @@
     opacity: 1;
   }
 }
-
-
-

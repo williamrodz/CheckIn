@@ -11,6 +11,8 @@
   <link href="css/bootstrap.min.css" rel="stylesheet">
   <link href="css/custom.css" rel="stylesheet">
 
+  <!-- Scripts -->
+
   <script src="js/autocomplete.js"></script>
   <script src="https://d3js.org/d3.v5.min.js"></script>
   <script src="https://www.gstatic.com/firebasejs/5.7.3/firebase.js"></script>
@@ -33,15 +35,15 @@
         </li>
 
         <li class="nav-item masterSheetNavItem">
-          <a class="nav-link" title="Use if app not working" target="_blank" href="https://docs.google.com/spreadsheets/d/1G2CNtb4VXNooC-8G1G-oTF_C4VJDEbkIrq0EMysHr9E/edit?usp=sharing">Master Assignments Sheet</a>
-        </li>        
+          <a class="nav-link" id ="masterAssignmentsSheetLink" title="Use if app not working" target="_blank" href="https://docs.google.com/spreadsheets/d/1G2CNtb4VXNooC-8G1G-oTF_C4VJDEbkIrq0EMysHr9E/edit?usp=sharing">Master Assignments Sheet</a>
+        </li>
 <!--         Update href link above with current year's assignment sheet.-->
         <li class="nav-item exportCSVNavItem">
           <a class="nav-link" onclick= "exportCSV()" href="#">Export CSV</a>
         </li>
         <li class="nav-item settingsNavItem">
           <a class="nav-link" onclick="clickOnSettingsButton()"href="#">Settings</a>
-        </li>        
+        </li>
         </ul>
 
     </div>
@@ -99,13 +101,13 @@
        <div class="form-group guestNameInput">
          <label class='schoolNameLabel'>School Name</label>
          <datalist id="schoolList">
-         </datalist>       
+         </datalist>
          <input type="text" class="form-control" id="memberNameInput" placeholder="e.g. Cambridge High School" list="schoolList">
-       </div>  
+       </div>
      </form>
   </div>
   <div class="attendeesSection" id="attendeesSection">
-   <p class='schoolStudentsLabel'>School's Students</p>
+   <p class='schoolStudentsLabel'>Delegates</p>
    <div class="list-group" id="guestList">
    </div>
   </div>
@@ -119,10 +121,10 @@
       <form>
        <div class="form-group guestNameInput">
          <datalist id="attendeeList">
-         </datalist>       
+         </datalist>
          <input type="text" class="form-control selfCheckInNameInput" id="selfCheckInNameInput" placeholder="e.g. Cambridge High School" list="attendeeList">
-       </div>  
-     </form>  
+       </div>
+     </form>
     <button id="checkInButton" class="btn btn-default"type="button" onclick="clickCheckInButton()" disabled="true">Check In</button>
   </div>
 
@@ -138,7 +140,7 @@
       <div class="modal-content">
         <a class="close" href="#" data-dismiss="modal">&times;</a>
         <div class="page-body">
-          <div class="head">  
+          <div class="head">
             <h3 style="margin-top:5px;">Check-in confirmed!</h3>
           </div>
 
@@ -159,18 +161,20 @@
   <div class="settingsSection">
       <h2>Settings</h2>
       <ul>
-        <li>Conference Name<input id="conferenceNameInput" ng-model="conferenceName"type="text" name="conferenceName" value="MITMUNC"><br> </li>        
+        <li>Conference Name<input id="conferenceNameInput" ng-model="conferenceName"type="text" name="conferenceName" value="MITMUNC"><br> </li>
         <li>Navbar Color<input id="navBarColorInput" type="text" name="navBarColor" value="#8B0000"><br> </li>
-        <li>Check-in Mode
+        <li>Master Assignments Speadsheet<input id="masterAssignmentsSheetInput" type="text" name="masterAssignmentsSheet"><br> </li>
+
+        <li>Check-in Mode (Only use Master)
           <select id="checkInModeDropdown"name="Mode">
-          <option value="noneSelected">Select Mode</option>            
+          <option value="noneSelected">Select Mode</option>
           <option value="MASTER">Master Check In</option>
           <option value="SELFCHECKIN">Self Check-In</option>
           </select>
-        </li>        
+        </li>
       </ul>
       <button type="button" class="btn btn-danger" onclick="saveSettingsButton()">Save Settings</button>
-  </div>  
+  </div>
 
    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
