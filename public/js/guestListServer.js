@@ -509,7 +509,7 @@ function clickCheckInButton(){
 
 // Exports CSV file
 function exportCSV(){
-	exportRowsToCsv('MITMUNCCheckInData', getArrayOfRowData());
+	exportRowsToCsv('MITMUNCCheckInData.csv', getArrayOfRowData());
 }
 
 
