@@ -1,6 +1,7 @@
 # Test CSV
 test.csv
 
+.DS_Store
 # Logs
 logs
 *.log
